@@ -28,6 +28,11 @@ public class UserController {
         return convertFromModel(userModel);
     }
 
+    /**
+     *
+     * @param userModel
+     * @return
+     */
     public UserVO convertFromModel(UserModel userModel) {
         if (userModel == null){
             return null;
