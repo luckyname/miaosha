@@ -5,5 +5,8 @@ package com.miaoshaproject.error;
  * @date ：Created in 2019/4/29 9:10
  * @description：
  */
-public class commonError {
+public interface CommonError {
+     int getErrCode();
+     String getErrMsg();
+     public CommonError setErrMsg(String errMsg);
 }
