@@ -18,6 +18,7 @@ import java.util.Map;
  * @description：异常基类
  */
 public class BaseController {
+    public final static String CONTENT_TYPE_FORMED ="application/x-www-form-urlencoded";
     //定义ExceptionHandler 解决为呗Controller层吸收的exception
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.OK)

@@ -6,6 +6,7 @@ import com.miaoshaproject.error.EmBusinessError;
 import com.miaoshaproject.response.CommonReturnType;
 import com.miaoshaproject.service.impl.UserServiceImpl;
 import com.miaoshaproject.service.model.UserModel;
+import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,13 +22,45 @@ import java.util.Random;
  */
 @Controller
 @RequestMapping("/user")
+@CrossOrigin
 public class UserController extends BaseController {
     @Autowired
     private UserServiceImpl userService;
     @Autowired
     private HttpServletRequest httpServletRequest;
+    //用户注册接口
+    @RequestMapping(value = "/register",method = {RequestMethod.POST},consumes = {CONTENT_TYPE_FORMED})
+    @ResponseBody
+    private  CommonReturnType register(
+            @RequestParam(name = "iphone")String iphone,
+            @RequestParam(name = "otpCode")String otpCode,
+            @RequestParam(name = "name")String name,
+            @RequestParam(name = "gender")Integer gender,
+            @RequestParam(name = "age")Integer age,
+            @RequestParam(name = "password")String password) throws BusinessException {
+        //验证手机号和对应的 otpCode是否一致
+        String inSesionOtpCode = (String) this.httpServletRequest.getSession().getAttribute(iphone);
+        if(!com.alibaba.druid.util.StringUtils.equals(otpCode,inSesionOtpCode)){
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"短信验证吗不符合");
+        }
+        //用户注册
+        UserModel userModel = new UserModel();
+        userModel.setName(name);
+        userModel.setGender(new Byte(String.valueOf(gender.intValue())));
+        userModel.setAge(age);
+        userModel.setIphone(iphone);
+        userModel.setRegisterMode("byphone");
+        //对密码明文加密
+        userModel.setEncrptPassword(MD5Encoder.encode(password.getBytes()));
+        userService.register(userModel);
+        return CommonReturnType.create(null);
+    }
+
+
+
+
     //用户获取otp短信接口
-    @RequestMapping("/getopt")
+    @RequestMapping(value = "/getopt",method = {RequestMethod.POST},consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
     public CommonReturnType getOtp(@RequestParam(name = "iphone") String iphone) {
     // 1.需要按照一定的规则生成OTP的验证码
