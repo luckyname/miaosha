@@ -8,8 +8,8 @@ public enum EmBusinessError implements CommonError {
     PARAMETER_VALIDATION_ERROR(10001,"参数不合法"),
     UNKNOWN_ERROR(10002,"未知错误"),
     //20000開頭為用戶信息相關錯誤定義
-    USER_NOT_EXIST(20001,"用戶不存在");
-
+    USER_NOT_EXIST(20001,"用戶不存在"),
+    USER_LOGIN_FAIL(20002,"用户手机或密码不正确");
     private  int errCode;
     private String errMsg;
 

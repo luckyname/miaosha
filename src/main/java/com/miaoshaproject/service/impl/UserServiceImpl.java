@@ -11,6 +11,7 @@ import com.miaoshaproject.service.model.UserModel;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,16 +57,50 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
         }
         UserDO userDO = convertFromModel(userModel);
-        userDOMapper.insertSelective(userDO);
+        try {
+            userDOMapper.insertSelective(userDO);
+        } catch (DuplicateKeyException e) {
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "改电话号码已经注册");
+        }
+        userModel.setId(userDO.getId());
         UserPasswordDO userPasswordDO = convertPasswordFromModel(userModel);
         userPasswordDOMapper.insertSelective(userPasswordDO);
         return;
     }
+
+    /**
+     * 用户登录
+     *
+     * @param iphone
+     * @param encrptPasssword
+     */
+    @Override
+    public UserModel login(String iphone, String encrptPasssword) throws BusinessException {
+        if (iphone == null || encrptPasssword == null) {
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
+        }
+        //通过用户手机获取用户信息
+        UserDO userDO = userDOMapper.selectByIphone(iphone);
+        if (userDO == null) {
+            throw new BusinessException(EmBusinessError.USER_LOGIN_FAIL);
+        }
+        UserPasswordDO userPasswordDO = userPasswordDOMapper.selectByUserId(userDO.getId());
+        UserModel userModel = convertFromDataObject(userDO, userPasswordDO);
+
+        //比对用户信息内 加密的 密码是否是前台 传入的参数一致
+//        if (userPasswordDO)
+        if (!StringUtils.equals(encrptPasssword, userModel.getEncrptPassword())) {
+            throw new BusinessException(EmBusinessError.USER_LOGIN_FAIL);
+        }
+        return userModel;//登陆成功
+
+    }
+
     //Model 转 数据层 PasswordModel
-    private UserPasswordDO convertPasswordFromModel(UserModel userModel){
-        if (userModel==null)
+    private UserPasswordDO convertPasswordFromModel(UserModel userModel) {
+        if (userModel == null)
             return null;
-        UserPasswordDO userPasswordDO= new UserPasswordDO();
+        UserPasswordDO userPasswordDO = new UserPasswordDO();
         userPasswordDO.setEncrptPassword(userModel.getEncrptPassword());
         userPasswordDO.setUserid(userModel.getId());
         return userPasswordDO;

@@ -18,4 +18,11 @@ public interface UserService {
      * @param userModel
      */
     void register(UserModel userModel) throws BusinessException;
+
+    /**
+     * 用户登录
+     * @param iphone 用户注册后的手机
+     * @param passoword 用户加密后的密码
+     */
+    UserModel login(String iphone ,String encrptPasssword) throws BusinessException;
 }
