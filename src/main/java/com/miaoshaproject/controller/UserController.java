@@ -18,7 +18,7 @@ import java.util.Random;
 /**
  * @author ：shundong.wu
  * @date ：Created in 2019/4/28 15:40
- * @description：用户控制器11
+ * @description：用户控制器
  */
 @Controller
 @RequestMapping("/user")
