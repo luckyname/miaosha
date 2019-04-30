@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>注冊</title>
+	<link rel="stylesheet" type="text/css" href="static/assets/global/css/components.css">
+	<link rel="stylesheet" type="text/css" href="static/assets/admin/pages/css/login.css">
+	<link rel="stylesheet" type="text/css" href="static/assets/global/plugins/bootstrap/css/bootstrap.css">
+	<script type="text/javascript" src="static/assets/global/plugins/jquery-1.11.0.min.js"></script>
+</head>
+<body class="login">
+	<div class="content">
+		<h3 class="form-title">获取otp信息</h3>
+		<div class="form-group">
+			<label class="control-label">手机号</label>
+			<div>
+				<input class="form-control" type="text" placeholder="手机号" name="iphone" id="iphone">
+			</div>
+			<label class="control-label">验证码</label>
+			<div>
+				<input class="form-control" type="text" placeholder="验证码" name="otpCode" id="otpCode">
+			</div>
+			<label class="control-label">用户昵称</label>
+			<div>
+				<input class="form-control" type="text" placeholder="用户昵称" name="name" id="name">
+			</div>
+			<label class="control-label">性别</label>
+			<div>
+				<input class="form-control" type="text" placeholder="性别" name="gender" id="gender">
+			</div>
+			<label class="control-label">年龄</label>
+			<div>
+				<input class="form-control" type="text" placeholder="年龄" name="age" id="age">
+			</div>
+			<label class="control-label">密码</label>
+			<div>
+				<input class="form-control" type="text" placeholder="密码" name="password" id="password">
+			</div>
+
+
+			<div class="form-actions">
+				<button class="btn blue" id="register" type="submit">
+					提交注册
+				</button>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	//切记 一定要等到 DOM渲染完成才进行操作
+	$(document).ready(function(){
+		$("#register").on("click",function(){
+			var iphone = $("#iphone").val();
+			var password =  $("#password").val();
+			var age =  $("#age").val();
+			var name =  $("#name").val();
+			var gender =  $("#gender").val();
+			var otpCode =  $("#otpCode").val();
+			if(iphone == "" || iphone == null){
+				alert("手机号不能为空");
+			return false;
+			}
+			if(password == "" || password == null){
+				alert("密码不能为空");
+			return false;
+			}
+			if(age == "" || age == null){
+				alert("年龄不能为空");
+			return false;
+			}
+			if(otpCode == "" || otpCode == null){
+				alert("年龄不能为空");
+			return false;
+			}
+			$.ajax({
+				type:"POST",
+				contentType:"application/x-www-form-urlencoded",
+				url:"http://localhost:8090/user/register",
+				// http://localhost:8090/user/getopt
+				data:{
+					"iphone":$("#iphone").val(),
+					"password":password,
+					"age":age,
+					"name":name,
+					"gender":gender,
+					"password":password,
+					"otpCode":otpCode
+				},
+				xhrFields: {
+				      withCredentials: true
+				   },
+				success:function(data){
+					if(data.status == "success")
+						alert("注册成功");
+					else
+						alert("注册失败,原因为"+data.data.errMsg)
+				},
+				error:function(data){
+					alert("注册失败,原因在"+data.responseText);
+				}
+			})
+			return false;
+		});
+	});
+</script>
+</html>
