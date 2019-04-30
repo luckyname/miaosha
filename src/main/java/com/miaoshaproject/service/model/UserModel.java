@@ -1,5 +1,9 @@
 package com.miaoshaproject.service.model;
 
+//import org.hibernate.validator.constraints.*;
+
+import javax.validation.constraints.*;
+
 /**
  * @author ：shundong.wu
  * @date ：Created in 2019/4/28 15:49
@@ -7,12 +11,19 @@ package com.miaoshaproject.service.model;
  */
 public class UserModel {
     private Integer id;
+    @NotBlank(message="用户名不能为空")
     private String name;
+    @NotNull(message = "性别不能不填写")
     private Byte gender;
+    @NotNull(message = "年龄不能不填写")
+    @Min(value = 0,message = "年龄必须大于0")
+    @Max(value = 150,message = "年龄必须小于150岁")
     private Integer age;
+    @NotBlank(message="手机号不能为空")
     private String iphone;
     private String registerMode;
     private String thirdPartyId;
+    @NotBlank(message="用户密码不能为空")
     private String encrptPassword;
     public String getEncrptPassword() {
         return encrptPassword;

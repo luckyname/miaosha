@@ -64,10 +64,13 @@
 				      withCredentials: true
 				   },
 				success:function(data){
-					if(data.status == "success")
+					if(data.status == "success"){
 						alert("登陆成功");
-					else
+						// window.location.href="register.html";
+					}else{
 						alert("登录失败,原因为"+data.data.errMsg)
+					}
+
 				},
 				error:function(data){
 					alert("登录失败,原因在"+data.responseText);
