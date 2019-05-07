@@ -1,7 +1,11 @@
 package com.miaoshaproject.dao;
 
 import com.miaoshaproject.dataobject.UserDO;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Component;
 
+@Component
+@Mapper
 public interface UserDOMapper {
 
     /**

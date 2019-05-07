@@ -17,19 +17,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @MapperScan("com.miaoshaproject.dao")
 public class App {
-//    @Autowired
-//    private UserDOMapper userDOMapper;
-//
-//    @RequestMapping("/")
-//    public String home(){
-//        UserDO  userDO = userDOMapper.selectByPrimaryKey(1);
-//        if (userDO  == null ){
-//            return "用户对象不存在";
-//        }
-//        return userDO.getName();
-//
-//
-//    }
+    @Autowired
+    private UserDOMapper userDOMapper;
+
+    @RequestMapping("/")
+    public String home(){
+        UserDO  userDO = userDOMapper.selectByPrimaryKey(1);
+        if (userDO  == null ){
+            return "用户对象不存在";
+        }
+        return userDO.getName();
+
+
+    }
     public static void main( String[] args ){
         System.out.println( "Hello World!" );
         SpringApplication.run(App.class,args);
