@@ -6,7 +6,9 @@ import com.miaoshaproject.error.EmBusinessError;
 import com.miaoshaproject.response.CommonReturnType;
 import com.miaoshaproject.service.impl.UserServiceImpl;
 import com.miaoshaproject.service.model.UserModel;
+import org.apache.commons.lang3.ArchUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.Fraction;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,7 +34,6 @@ public class UserController extends BaseController {
     private UserServiceImpl userService;
     @Autowired
     private HttpServletRequest httpServletRequest;
-
     //用户登录
     //用户注册接口
     @RequestMapping(value = "/login", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
