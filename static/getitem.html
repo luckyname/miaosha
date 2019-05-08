@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>商品详情</title>
+    <link rel="stylesheet" type="text/css" href="static/assets/global/css/components.css">
+    <link rel="stylesheet" type="text/css" href="static/assets/admin/pages/css/login.css">
+    <link rel="stylesheet" type="text/css" href="static/assets/global/plugins/bootstrap/css/bootstrap.css">
+    <script type="text/javascript" src="static/assets/global/plugins/jquery-1.11.0.min.js"></script>
+</head>
+<body class="login">
+<div class="content">
+    <h3 class="form-title">商品详情</h3>
+    <div class="form-group">
+        <label class="control-label">商品名</label>
+        <div>
+            <label class="control-label" type="text" placeholder="商品名" name="title" id="title"/>
+        </div>
+        <label class="control-label">商品描述</label>
+        <div>
+            <label class="control-label" type="text" placeholder="商品描述" name="description" id="description"/>
+        </div>
+        <label class="control-label">价格</label>
+        <div>
+            <label class="control-label" type="text" placeholder="价格" name="price" id="price"/>
+        </div>
+
+        <label class="control-label">商品图片</label>
+        <div>
+            <img style="width: 200px;height: auto" id="imgUrl"/>
+        </div>
+        <label class="control-label">库存</label>
+        <div>
+            <label class="control-label" type="text" placeholder="商品库存" name="stock" id="stock"/>
+        </div>
+        <label class="control-label">销量</label>
+        <div>
+            <label class="control-label" type="text" placeholder="商品库存" name="sales" id="sales"/>
+        </div>
+
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    var g_itemVo = {};
+    //切记 一定要等到 DOM渲染完成才进行操作
+    $(document).ready(function () {
+        //获取商品详情
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8090/item/getItem",
+            // http://localhost:8090/user/getopt
+            data: {
+                "id": getParam("id"),
+            },
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                if (data.status == "success") {
+                    g_itemVo = data.data;
+                    reloadDom();
+                } else {
+                    alert("获取信息失败,原因为" + data.data.errMsg)
+                }
+            },
+            error: function (data) {
+                alert("获取信息失败,原因在" + data.responseText);
+            }
+        });
+    });
+
+    function getParam(paramName) {
+        paramValue = "", isFound = !1;
+        if (this.location.search.indexOf("?") == 0 && this.location.search.indexOf("=") > 1) {
+            arrSource = unescape(this.location.search).substring(1, this.location.search.length).split("&"), i = 0;
+            while (i < arrSource.length && !isFound)
+                arrSource[i].indexOf("=") > 0 && arrSource[i].split("=")[0].toLowerCase() == paramName.toLowerCase() && (paramValue = arrSource[i].split("=")[1], isFound = !0), i++
+        }
+        return paramValue == "" && (paramValue = null), paramValue
+    }
+
+    function reloadDom() {
+        $("#title").text(g_itemVo.title);
+        $("#description").text(g_itemVo.description);
+        $("#price").text(g_itemVo.price);
+        $("#stock").text(g_itemVo.stock);
+        $("#sales").text(g_itemVo.sales);
+        $("#imgUrl").attr("src",g_itemVo.imgUrl)
+    }
+</script>
+</html>
